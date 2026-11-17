@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fi Europe Messe-Netz</title>
+<meta name="description" content="3D-Hallenplan, Firmenprofile und Chat für Aussteller der Fi Europe 2026 – jeder schreibt in seiner Sprache.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1F6A75">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F3F7F8;--surface:#fff;--ink:#18262C;--muted:#5B6A70;--line:#E1E7EA;--petrol:#1F6A75;--soft:#E3F1F3;--me:#DDF1E5;--a:#2C8A55;--gold:#F2B705;
+  --display:"Barlow Semi Condensed","Arial Narrow",sans-serif;--body:"Barlow","Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.45 var(--body);display:flex;flex-direction:column}
+header{background:linear-gradient(135deg,#1F6A75,#2C8A8F 60%,#5FB3A8);color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px));display:flex;gap:10px;align-items:center;box-shadow:0 4px 16px rgba(31,106,117,.25);z-index:3}
+header h1{font:700 21px/1.05 var(--display);margin:0;flex:1;min-width:0}
+header small{display:block;font:500 12px var(--body);opacity:.9}
+header button{font:700 14px var(--display);background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:8px 11px;cursor:pointer}
+main{flex:1;min-height:0;position:relative}
+.view{position:absolute;inset:0;overflow-y:auto}
+.pad{padding:14px max(14px,env(safe-area-inset-right,0px)) 18px max(14px,env(safe-area-inset-left,0px));max-width:760px;margin:0 auto;display:grid;gap:12px;align-content:start}
+button{font-family:var(--display);cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--petrol);outline-offset:2px}
+nav.tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px max(6px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));box-shadow:0 -2px 12px rgba(20,40,50,.06);z-index:3}
+nav.tabs button{border:0;background:none;color:var(--muted);font:600 13px/1.1 var(--display);padding:7px 2px;border-radius:10px;display:grid;gap:3px;justify-items:center;position:relative}
+nav.tabs button span{font-size:20px;line-height:1}
+nav.tabs button[aria-selected="true"]{color:var(--petrol);background:var(--soft)}
+nav.tabs .badge{position:absolute;top:2px;right:18%;background:#C2513B;color:#fff;font:700 11px/1 var(--body);padding:3px 5px;border-radius:99px}
+/* 3D */
+#plan{display:flex;flex-direction:column}
+#halls{display:flex;gap:6px;overflow-x:auto;padding:10px 14px 6px}
+#halls button{font:700 15px/1 var(--display);padding:9px 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);white-space:nowrap}
+#halls button[aria-pressed="true"]{background:var(--petrol);border-color:var(--petrol);color:#fff}
+#box{flex:1;min-height:300px;position:relative;touch-action:none;background:linear-gradient(180deg,#F4F8FA,#E1ECEF)}
+#box canvas{display:block;width:100%;height:100%}
+.hint{position:absolute;left:10px;right:10px;bottom:10px;font:600 13px var(--body);color:var(--petrol);background:rgba(255,255,255,.88);padding:7px 10px;border-radius:9px;pointer-events:none}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);padding:6px 14px 8px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+/* cards */
+.card{background:var(--surface);border-radius:16px;padding:14px;box-shadow:0 2px 4px rgba(20,40,50,.05),0 8px 22px rgba(20,40,50,.08);display:grid;gap:8px}
+.card h2{font:700 22px/1.1 var(--display);margin:0}
+.meta{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 13px/1 var(--display);padding:6px 9px;border-radius:999px;background:var(--soft);color:var(--petrol)}
+.chip.g{background:var(--me);color:var(--a)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:700 17px/1 var(--display);padding:13px 16px;border-radius:12px;border:0;background:linear-gradient(135deg,#1F6A75,#2C8A8F);color:#fff;box-shadow:0 4px 12px rgba(31,106,117,.3);text-decoration:none;display:inline-block}
+.btn.soft{background:var(--surface);color:var(--petrol);border:1px solid var(--line);box-shadow:none}
+.foot{font-size:13px;color:var(--muted);margin:0}
+.foot a,.card a{color:var(--petrol)}
+.stand{font:700 26px/1 var(--display);color:var(--petrol)}
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:10;background:rgba(20,30,35,.4);display:flex;align-items:flex-end;justify-content:center}
+.sheet>.panel{background:var(--bg);width:100%;max-width:760px;max-height:88%;overflow-y:auto;border-radius:20px 20px 0 0;padding:16px max(14px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));display:grid;gap:12px}
+label{display:grid;gap:6px;font:600 13px var(--display);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+input,textarea{width:100%;font:17px var(--body);padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick{display:flex;flex-wrap:wrap;gap:7px}
+.pick button{font:600 15px var(--display);padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.pick button[aria-pressed="true"]{border-color:var(--petrol);background:var(--soft);color:var(--petrol)}
+/* chat */
+#chatView{display:flex;flex-direction:column}
+#msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:12px max(14px,env(safe-area-inset-right,0px)) 12px max(14px,env(safe-area-inset-left,0px))}
+.m{background:var(--surface);border-radius:16px 16px 16px 4px;padding:10px 12px;max-width:88%;box-shadow:0 2px 8px rgba(20,40,50,.07);align-self:flex-start;display:grid;gap:4px}
+.m.me{align-self:flex-end;background:var(--me);border-radius:16px 16px 4px 16px}
+.m .who{font:700 14px var(--display);color:var(--petrol)} .m .who span{font:500 12px var(--body);color:var(--muted)}
+.m .txt{white-space:pre-wrap;overflow-wrap:anywhere}
+.m .tools{font-size:12px;color:var(--muted);display:flex;gap:10px}
+.m .tools button{background:none;border:0;padding:0;color:var(--petrol);font:600 12px var(--body)}
+.m .orig{font-size:13px;color:var(--muted);border-top:1px dashed var(--line);padding-top:4px;white-space:pre-wrap}
+.sys{align-self:center;font-size:13px;color:var(--muted);background:var(--soft);padding:6px 12px;border-radius:999px;text-align:center}
+#send{display:flex;gap:8px;padding:10px max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px));border-top:1px solid var(--line);background:var(--bg)}
+#send textarea{flex:1;min-height:48px;max-height:130px;resize:none}
+#send button{font:700 18px var(--display);border:0;border-radius:12px;background:var(--petrol);color:#fff;padding:0 18px}
+.sug{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;cursor:pointer}
+.score{font:700 15px var(--display);color:#fff;background:var(--a);border-radius:12px;padding:10px 8px;min-width:54px;text-align:center}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font:600 15px var(--display);z-index:20}
+#qr{background:#fff;padding:10px;border-radius:12px;justify-self:center}
+.status{font-size:12px;opacity:.85}
+</style>
+</head>
+<body>
+<header>
+  <h1>Fi Europe Messe-Netz<small id="hSub">3D-Plan · Profile · Chat in jeder Sprache</small></h1>
+  <span class="status" id="status"></span>
+  <button id="qrBtn" type="button">QR</button>
+</header>
+<main>
+  <section class="view" id="plan">
+    <div id="halls"></div>
+    <div id="box"><div class="hint" id="hint">Wischen = drehen · 2 Finger = zoomen · Stand antippen</div></div>
+    <div class="legend"><span><i style="background:#F2B705"></i><b id="lgHost">Gastgeber</b></span><span><i style="background:#2C8A55"></i><span id="lgNet">im Netz (online erreichbar)</span></span><span><i style="background:#7FA9B0"></i><span id="lgEx">Aussteller</span></span><span><i style="background:#E07A5F"></i><span id="lgSug">Vorschlag für Sie</span></span></div>
+  </section>
+  <section class="view" id="sugView" hidden><div class="pad" id="sugList"></div></section>
+  <section class="view" id="chatView" hidden>
+    <div id="msgs" aria-live="polite"></div>
+    <form id="send" autocomplete="off"><textarea id="iText" maxlength="450" rows="1"></textarea><button type="submit" id="sendBtn">➤</button></form>
+  </section>
+  <section class="view" id="meView" hidden><div class="pad" id="meBox"></div></section>
+</main>
+<nav class="tabs" role="tablist">
+  <button role="tab" data-v="plan" aria-selected="true"><span>◈</span><b id="tPlan">3D-Plan</b></button>
+  <button role="tab" data-v="sugView" aria-selected="false"><span>✦</span><b id="tSug">Für Sie</b></button>
+  <button role="tab" data-v="chatView" aria-selected="false"><span>💬</span><b id="tChat">Chat</b><i class="badge" id="badge" hidden></i></button>
+  <button role="tab" data-v="meView" aria-selected="false"><span>☺</span><b id="tMe">Ich</b></button>
+</nav>
+
+<div class="sheet" id="sheet" hidden><div class="panel" id="sheetBody"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script>
+// ======================= Basis =======================
+const CFG = window.MESSE_CFG || {};
+const ROOM = 'fie2026';
+const LANGS = [['de','Deutsch'],['en','English'],['tr','Türkçe'],['nl','Nederlands'],['fr','Français'],['it','Italiano'],['es','Español'],['pl','Polski'],['pt','Português'],['ar','العربية'],['zh','中文'],['ru','Русский']];
+const CATS = [['salz','🧂','Salz & Mineralien'],['gewuerz','🌶️','Gewürze & Würzmischungen'],['fleisch','🥩','Fleisch & Wurst'],['milch','🧀','Milch & Käse'],['back','🍞','Backwaren & Snacks'],['getraenk','🥤','Getränke'],['handel','🚚','Handel & Distribution'],['zutat','⚗️','Zusatzstoffe & Zutaten'],['pflanze','🌱','Pflanzlich & Bio'],['verpackung','📦','Verpackung'],['technik','⚙️','Maschinen & Technik'],['logistik','🛳️','Logistik & Import']];
+const UI = {
+ de:{sub:'3D-Plan · Profile · Chat in jeder Sprache',plan:'3D-Plan',sug:'Für Sie',chat:'Chat',me:'Ich',host:'Gastgeber',net:'im Netz (erreichbar)',ex:'Aussteller',sugL:'Vorschlag für Sie',hint:'Wischen = drehen · 2 Finger = zoomen · Stand antippen',
+   join:'Ins Messe-Netz – 1 Klick',jtx:'Wählen Sie Ihre Sprache, tragen Sie Firma und Stand ein. Danach erscheint Ihr Stand im 3D-Plan, Sie erhalten passende Vorschläge und können mit allen Ständen schreiben – jede Nachricht wird automatisch übersetzt.',
+   lang:'Meine Sprache',name:'Name',firma:'Firma',stand:'Stand (z. B. 42J73)',bietet:'Wir bieten',sucht:'Wir suchen',about:'Kurz über uns (optional)',joinBtn:'Beitreten',write:'Nachricht schreiben',web:'Webseite',src:'Quelle',
+   noProfile:'Noch kein Profil – Infos aus dem Ausstellerverzeichnis.',need:'Bitte Name und Firma eintragen',ph:'Nachricht in Ihrer Sprache …',tr:'übersetzt',orig:'Original',empty:'Noch keine Nachrichten. Schreiben Sie die erste!',
+   sugT:'Passende Stände für Sie',sugE:'Treten Sie bei und wählen Sie, was Sie suchen – dann zeigen wir passende Stände.',why:'Warum',netOff:'Chat noch nicht verbunden',offline:'offline',online:'online',
+   priv:'Gespeichert werden Name, Firma, Stand, Sprache, Ihre Angaben, Nachrichten und angesehene Stände (für bessere Vorschläge). Server in der EU. Zum Übersetzen geht der Text an MyMemory (Translated srl). Alle Nachrichten sind für alle im Netz sichtbar. Löschung nach der Messe. Betreiber: ATMSALT – ',
+   leave:'Austreten (nur auf diesem Handy)',qr:'Andere Stände einladen',close:'Schließen',youAre:'Sie sind im Netz als'},
+ en:{sub:'3D plan · profiles · chat in any language',plan:'3D plan',sug:'For you',chat:'Chat',me:'Me',host:'Host',net:'in the network',ex:'Exhibitor',sugL:'Suggested for you',hint:'Swipe = rotate · 2 fingers = zoom · tap a stand',
+   join:'Join the fair network – 1 tap',jtx:'Choose your language, enter company and stand. Your stand then appears in the 3D plan, you get matching suggestions and can write to all stands – every message is translated automatically.',
+   lang:'My language',name:'Name',firma:'Company',stand:'Stand (e.g. 42J73)',bietet:'We offer',sucht:'We are looking for',about:'About us (optional)',joinBtn:'Join',write:'Send message',web:'Website',src:'Source',
+   noProfile:'No profile yet – info from the exhibitor directory.',need:'Please enter name and company',ph:'Message in your language …',tr:'translated',orig:'Original',empty:'No messages yet. Write the first one!',
+   sugT:'Matching stands for you',sugE:'Join and choose what you are looking for – then we show matching stands.',why:'Why',netOff:'Chat not connected yet',offline:'offline',online:'online',
+   priv:'We store name, company, stand, language, your details, messages and viewed stands (for better suggestions). Servers in the EU. For translation the text is sent to MyMemory (Translated srl). All messages are visible to everyone in the network. Deleted after the fair. Operator: ATMSALT – ',
+   leave:'Leave (on this phone only)',qr:'Invite other stands',close:'Close',youAre:'You are in the network as'},
+ tr:{sub:'3D plan · profiller · her dilde sohbet',plan:'3D plan',sug:'Size özel',chat:'Sohbet',me:'Ben',host:'Ev sahibi',net:'ağda',ex:'Katılımcı',sugL:'Size öneri',hint:'Kaydır = döndür · 2 parmak = yakınlaştır · standa dokun',
+   join:'Fuar ağına katıl – 1 dokunuş',jtx:'Dilinizi seçin, firma ve standınızı girin. Standınız 3D planda görünür, uygun öneriler alırsınız ve tüm standlara yazabilirsiniz – her mesaj otomatik çevrilir.',
+   lang:'Dilim',name:'Ad',firma:'Firma',stand:'Stand (ör. 42J73)',bietet:'Sunduklarımız',sucht:'Aradıklarımız',about:'Hakkımızda (isteğe bağlı)',joinBtn:'Katıl',write:'Mesaj yaz',web:'Web sitesi',src:'Kaynak',
+   noProfile:'Henüz profil yok – katılımcı listesinden bilgi.',need:'Lütfen ad ve firma girin',ph:'Kendi dilinizde mesaj …',tr:'çevrildi',orig:'Orijinal',empty:'Henüz mesaj yok. İlkini siz yazın!',
+   sugT:'Size uygun standlar',sugE:'Katılın ve ne aradığınızı seçin – size uygun standları gösterelim.',why:'Neden',netOff:'Sohbet henüz bağlı değil',offline:'çevrimdışı',online:'çevrimiçi',
+   priv:'Ad, firma, stand, dil, bilgileriniz, mesajlar ve görüntülenen standlar saklanır (daha iyi öneriler için). Sunucular AB’de. Çeviri için metin MyMemory’ye (Translated srl) gönderilir. Tüm mesajlar ağdaki herkes tarafından görülebilir. Fuardan sonra silinir. İşletmeci: ATMSALT – ',
+   leave:'Ayrıl (sadece bu telefonda)',qr:'Diğer standları davet et',close:'Kapat',youAre:'Ağdaki adınız'}
+};
+let lang = 'en', me = null, sb = null, FIRMS = [], members = {}, msgs = [], views = {}, curView = 'plan', unread = 0;
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const T = k => (UI[lang] || UI.en)[k] || UI.en[k];
+const store = {get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }, set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }, del(k){ try { localStorage.removeItem(k); } catch (e) {} }};
+function toast(t){ const el = $('toast'); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2400); }
+const uuid = () => crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+const normStand = s => String(s || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
+
+// Kategorien aus Firmentext ableiten (für Aussteller ohne Profil)
+const CAT_RE = {salz:/salz|salt|zout|mineral|tuz/i, gewuerz:/gewürz|würz|spice|season|herb|kräuter|baharat|flavour|flavor/i, fleisch:/fleisch|meat|wurst|poultry/i, milch:/käse|cheese|milch|dairy|molkerei/i,
+  back:/bäck|bak|snack|panier|bread|nut|nuss|cereal/i, getraenk:/getränk|beverage|juice|drink/i, handel:/händler|distribut|import|trading|großhandel|wholesale/i, zutat:/zusatz|additive|ingredient|phosphat|hydrocoll|starch|enzym|premix/i,
+  pflanze:/plant|pflanz|organic|bio|vegan|protein/i, verpackung:/verpack|packag/i, technik:/maschin|equipment|technolog|machin/i, logistik:/logist|shipping|spedition/i};
+const inferCats = f => Object.keys(CAT_RE).filter(k => CAT_RE[k].test((f.typ || '') + ' ' + (f.about || '') + ' ' + (f.name || '')));
+// Was Aussteller typischerweise suchen (Einkauf): Zutaten-Hersteller kaufen Rohstoffe
+const inferNeeds = cats => { const n = new Set(); if (cats.some(c => ['gewuerz','fleisch','milch','back'].includes(c))) { n.add('salz'); n.add('zutat'); n.add('verpackung'); }
+  if (cats.includes('handel')) { n.add('salz'); n.add('gewuerz'); n.add('zutat'); n.add('logistik'); } if (cats.includes('salz')) { n.add('handel'); n.add('logistik'); n.add('verpackung'); } return [...n]; };
+
+// ======================= Profile (Verzeichnis + Mitglieder) =======================
+function allStands(){
+  const map = {};
+  FIRMS.forEach(f => { map[normStand(f.stand)] = {stand: f.stand, halle: f.halle, name: f.name, land: f.land, about: f.about, produkte: f.produkte, web: f.web, quelle: f.quelle, host: f.prio === 'P', cats: inferCats(f), needs: inferNeeds(inferCats(f)), member: null}; });
+  Object.values(members).forEach(m => { const k = normStand(m.stand); if (!k) return; const e = map[k] || (map[k] = {stand: m.stand, halle: m.stand.length > 1 ? m.stand[0] + '.' + m.stand[1] : '?', name: m.firma, land: '', about: '', produkte: [], web: '', quelle: '', cats: [], needs: []});
+    e.member = m; if (m.firma) e.name = m.firma; if (m.about) e.about = m.about; if (m.bietet && m.bietet.length) e.cats = m.bietet; if (m.sucht && m.sucht.length) e.needs = m.sucht; });
+  return map;
+}
+function suggestions(){
+  if (!me) return [];
+  const mine = {bietet: me.bietet || [], sucht: me.sucht || []};
+  const pop = {}; Object.values(views).forEach(v => { pop[v.stand] = (pop[v.stand] || 0) + 1; });
+  return Object.values(allStands()).filter(s => normStand(s.stand) !== normStand(me.stand)).map(s => {
+    const a = mine.sucht.filter(c => s.cats.includes(c)), b = mine.bietet.filter(c => s.needs.includes(c));
+    const score = a.length * 3 + b.length * 3 + (s.member ? 2 : 0) + Math.min(3, (pop[normStand(s.stand)] || 0) * 0.3);
+    return {s, a, b, score};
+  }).filter(x => x.a.length || x.b.length).sort((x, y) => y.score - x.score).slice(0, 25);
+}
+
+// ======================= UI-Texte =======================
+function applyUI(){
+  document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  $('hSub').textContent = T('sub'); $('tPlan').textContent = T('plan'); $('tSug').textContent = T('sug'); $('tChat').textContent = T('chat'); $('tMe').textContent = T('me');
+  $('lgHost').textContent = T('host'); $('lgNet').textContent = T('net'); $('lgEx').textContent = T('ex'); $('lgSug').textContent = T('sugL'); $('hint').textContent = T('hint');
+  $('iText').placeholder = T('ph');
+}
+function setView(v){ curView = v; document.querySelectorAll('nav.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.v === v));
+  ['plan','sugView','chatView','meView'].forEach(id => $(id).hidden = id !== v);
+  if (v === 'plan') setTimeout(() => P3 && P3.resize(), 30);
+  if (v === 'chatView') { unread = 0; $('badge').hidden = true; renderMsgs(true); if (!me) openJoin(); }
+  if (v === 'sugView') renderSug(); if (v === 'meView') renderMe(); }
+document.querySelector('nav.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setView(b.dataset.v); });
+
+// ======================= Sheet: Profil / Beitreten =======================
+function openSheet(html){ $('sheetBody').innerHTML = html; $('sheet').hidden = false; $('sheetBody').scrollTop = 0; }
+$('sheet').addEventListener('click', e => { if (e.target.id === 'sheet' || e.target.closest('[data-close]')) $('sheet').hidden = true; });
+function catChips(list, cls){ return list.map(c => { const k = CATS.find(x => x[0] === c); return k ? `<span class="chip ${cls || ''}">${k[1]} ${esc(k[2])}</span>` : ''; }).join(''); }
+function openProfile(key){
+  const s = allStands()[key]; if (!s) return;
+  logView(key);
+  const m = s.member;
+  openSheet(`<div class="card"><div class="stand">${esc(s.stand)} <span class="meta">· Hall ${esc(s.halle)}</span></div>
+    <h2>${esc(s.name)}</h2><div class="meta">${esc([s.land, m ? '🟢 ' + T('net') : ''].filter(Boolean).join(' · '))}</div>
+    ${s.cats.length ? `<div class="chips">${catChips(s.cats)}</div>` : ''}
+    ${s.needs.length && m ? `<div class="meta">${esc(T('sucht'))}:</div><div class="chips">${catChips(s.needs, 'g')}</div>` : ''}
+    <p style="margin:0">${esc(s.about) || esc(T('noProfile'))}</p>
+    ${s.produkte && s.produkte.length ? `<div class="chips">${s.produkte.map(p => `<span class="chip g">${esc(p)}</span>`).join('')}</div>` : ''}
+    <div class="btns">${m ? `<button class="btn" data-dm="${esc(s.name)}">${esc(T('write'))}</button>` : ''}${s.web ? `<a class="btn soft" href="${esc(s.web)}" target="_blank" rel="noopener">${esc(T('web'))}</a>` : ''}
+    <button class="btn soft" data-close>${esc(T('close'))}</button></div>
+    ${s.quelle ? `<p class="foot">${esc(T('src'))}: <a href="${esc(s.quelle)}" target="_blank" rel="noopener">Fi Europe exhibitor directory</a></p>` : ''}</div>`);
+}
+$('sheetBody').addEventListener('click', e => { const d = e.target.closest('[data-dm]'); if (d) { $('sheet').hidden = true; setView('chatView'); $('iText').value = '@' + d.dataset.dm + ' '; $('iText').focus(); } });
+
+let jsel = {bietet: new Set(), sucht: new Set()};
+function openJoin(){
+  if (!sb) { toast(T('netOff')); }
+  openSheet(`<h2 style="font:700 24px var(--display);margin:0">${esc(T('join'))}</h2><p class="foot" style="font-size:15px">${esc(T('jtx'))}</p>
+    <label>${esc(T('lang'))}</label><div class="pick" id="jLang">${LANGS.map(([c, n]) => `<button type="button" data-l="${c}" aria-pressed="${c === lang}">${n}</button>`).join('')}</div>
+    <label>${esc(T('name'))}<input id="jName" maxlength="60" autocomplete="name"></label>
+    <label>${esc(T('firma'))}<input id="jFirma" maxlength="80" autocomplete="organization"></label>
+    <label>${esc(T('stand'))}<input id="jStand" maxlength="20"></label>
+    <label>${esc(T('bietet'))}</label><div class="pick" data-set="bietet">${CATS.map(c => `<button type="button" data-c="${c[0]}" aria-pressed="false">${c[1]} ${c[2]}</button>`).join('')}</div>
+    <label>${esc(T('sucht'))}</label><div class="pick" data-set="sucht">${CATS.map(c => `<button type="button" data-c="${c[0]}" aria-pressed="false">${c[1]} ${c[2]}</button>`).join('')}</div>
+    <label>${esc(T('about'))}<textarea id="jAbout" maxlength="400" rows="3"></textarea></label>
+    <button class="btn" id="jBtn" type="button" style="font-size:22px;padding:18px">${esc(T('joinBtn'))}</button>
+    <p class="foot">${esc(T('priv'))}<a href="https://www.atmsalt.com/impressum.html" target="_blank" rel="noopener">Impressum</a> · <a href="https://www.atmsalt.com/datenschutz.html" target="_blank" rel="noopener">Datenschutz</a></p>`);
+  jsel = {bietet: new Set(), sucht: new Set()};
+}
+$('sheetBody').addEventListener('click', async e => {
+  const l = e.target.closest('#jLang [data-l]'); if (l) { const keep = {n: $('jName').value, f: $('jFirma').value, s: $('jStand').value}; lang = l.dataset.l; store.set('mn-lang', lang); applyUI(); openJoin(); $('jName').value = keep.n; $('jFirma').value = keep.f; $('jStand').value = keep.s; return; }
+  const c = e.target.closest('[data-set] [data-c]'); if (c) { const set = jsel[c.parentElement.dataset.set]; const k = c.dataset.c; set.has(k) ? set.delete(k) : set.add(k); c.setAttribute('aria-pressed', set.has(k)); return; }
+  if (e.target.id === 'jBtn') {
+    const m = {id: uuid(), room: ROOM, name: $('jName').value.trim(), firma: $('jFirma').value.trim(), stand: $('jStand').value.trim().toUpperCase(), lang,
+      bietet: [...jsel.bietet], sucht: [...jsel.sucht], about: $('jAbout').value.trim()};
+    if (!m.name || !m.firma) { toast(T('need')); return; }
+    if (!sb) { toast(T('netOff')); return; }
+    e.target.disabled = true;
+    const {error} = await sb.from('messe_members').insert(m);
+    e.target.disabled = false;
+    if (error) { toast('Error: ' + error.message); return; }
+    me = m; members[m.id] = m; store.set('mn-me', me); $('sheet').hidden = true; toast('✓'); rebuildPlan(); renderMe(); setView('sugView');
+  }
+});
+
+// ======================= Für Sie =======================
+function renderSug(){
+  if (!me) { $('sugList').innerHTML = `<div class="card"><h2>${esc(T('sugT'))}</h2><p style="margin:0">${esc(T('sugE'))}</p><button class="btn" id="sJoin" type="button">${esc(T('join'))}</button></div>`;
+    $('sJoin').onclick = openJoin; return; }
+  const list = suggestions();
+  $('sugList').innerHTML = `<h2 style="font:700 24px var(--display);margin:4px 0">${esc(T('sugT'))}</h2>` + (list.length ? list.map(x => `<div class="card sug" data-key="${esc(normStand(x.s.stand))}">
+    <div class="score">${esc(x.s.stand)}</div><div><b style="font:600 18px var(--display)">${esc(x.s.name)}</b>${x.s.member ? ' 🟢' : ''}
+    <div class="chips" style="margin-top:4px">${catChips(x.a)}${catChips(x.b, 'g')}</div></div></div>`).join('') : `<p class="foot">${esc(T('sugE'))}</p>`);
+}
+$('sugList').addEventListener('click', e => { const c = e.target.closest('[data-key]'); if (c) openProfile(c.dataset.key); });
+
+// ======================= Ich =======================
+function renderMe(){
+  const url = CFG.publicUrl || (location.origin + location.pathname);
+  $('meBox').innerHTML = (me ? `<div class="card"><div class="meta">${esc(T('youAre'))}</div><h2>${esc(me.firma)} · ${esc(me.stand)}</h2><div class="meta">${esc(me.name)} · ${esc((LANGS.find(l => l[0] === me.lang) || [0, me.lang])[1])}</div>
+     <div class="chips">${catChips(me.bietet || [])}${catChips(me.sucht || [], 'g')}</div><button class="btn soft" id="leave" type="button">${esc(T('leave'))}</button></div>`
+     : `<div class="card"><h2>${esc(T('join'))}</h2><p style="margin:0">${esc(T('jtx'))}</p><button class="btn" id="mJoin" type="button">${esc(T('joinBtn'))}</button></div>`)
+    + `<div class="card" style="justify-items:center;text-align:center"><b>${esc(T('qr'))}</b><div id="qr"></div><p class="foot">${esc(url)}</p></div>
+       <p class="foot">${esc(T('priv'))}<a href="https://www.atmsalt.com/impressum.html" target="_blank" rel="noopener">Impressum</a> · <a href="https://www.atmsalt.com/datenschutz.html" target="_blank" rel="noopener">Datenschutz</a></p>`;
+  if (window.QRCode) new QRCode($('qr'), {text: url, width: 200, height: 200, colorDark: '#18262C', colorLight: '#ffffff'});
+  const lv = $('leave'); if (lv) lv.onclick = () => { store.del('mn-me'); me = null; renderMe(); rebuildPlan(); };
+  const mj = $('mJoin'); if (mj) mj.onclick = openJoin;
+}
+$('qrBtn').addEventListener('click', () => setView('meView'));
+
+// ======================= Chat + Übersetzung =======================
+const tcache = store.get('mn-tc') || {}; const pending = {};
+async function translate(m){
+  if (m.lang === lang) return null; const key = m.id + ':' + lang;
+  if (tcache[key]) return tcache[key]; if (pending[key]) return pending[key];
+  pending[key] = (async () => { try {
+      const r = await fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(m.text.slice(0, 480)) + '&langpair=' + m.lang + '|' + lang);
+      const j = await r.json(); let t = j && j.responseData && j.responseData.translatedText;
+      if (!t || /MYMEMORY WARNING|QUERY LENGTH/i.test(t)) return null;
+      const ta = document.createElement('textarea'); ta.innerHTML = t; t = ta.value;
+      tcache[key] = t; const ks = Object.keys(tcache); if (ks.length > 800) delete tcache[ks[0]]; store.set('mn-tc', tcache); return t;
+    } catch (e) { return null; } finally { delete pending[key]; } })();
+  return pending[key];
+}
+function msgHTML(m){
+  const mine = me && m.member_id === me.id, tr = m.lang !== lang ? tcache[m.id + ':' + lang] : null;
+  return `<div class="m ${mine ? 'me' : ''}" data-id="${m.id}"><div class="who">${esc(m.name)} <span>${esc([m.firma, m.stand].filter(Boolean).join(' · '))} · ${new Date(m.created_at).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span></div>
+    <div class="txt">${esc(tr || m.text)}</div>${m.lang !== lang ? `<div class="tools"><span>${tr ? '🌐 ' + esc(T('tr')) + ' (' + esc(m.lang) + ')' : '… ' + esc(m.lang)}</span>${tr ? `<button type="button" data-orig="${m.id}">${esc(T('orig'))}</button>` : ''}</div><div class="orig" hidden id="o${m.id}">${esc(m.text)}</div>` : ''}</div>`;
+}
+function renderMsgs(force){
+  const box = $('msgs'); const atBottom = force || box.scrollHeight - box.scrollTop - box.clientHeight < 90;
+  box.innerHTML = msgs.length ? msgs.map(msgHTML).join('') : `<div class="sys">${esc(sb ? T('empty') : T('netOff'))}</div>`;
+  if (atBottom) box.scrollTop = box.scrollHeight;
+  msgs.filter(m => m.lang !== lang && !tcache[m.id + ':' + lang]).slice(-40).forEach(m => translate(m).then(t => { if (t) { const el = document.querySelector(`.m[data-id="${m.id}"]`); if (el) el.outerHTML = msgHTML(m); } }));
+}
+$('msgs').addEventListener('click', e => { const b = e.target.closest('[data-orig]'); if (b) { const o = $('o' + b.dataset.orig); o.hidden = !o.hidden; } });
+$('send').addEventListener('submit', async e => {
+  e.preventDefault(); if (!me) { openJoin(); return; } if (!sb) { toast(T('netOff')); return; }
+  const text = $('iText').value.trim(); if (!text) return; $('sendBtn').disabled = true;
+  const {error} = await sb.from('messe_messages').insert({room: ROOM, member_id: me.id, name: me.name, firma: me.firma, stand: me.stand, lang: me.lang, text});
+  $('sendBtn').disabled = false; if (error) { toast('Error: ' + error.message); return; } $('iText').value = '';
+});
+$('iText').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('send').requestSubmit(); } });
+
+// "Dazulernen": angesehene Stände merken (für Beliebtheit in den Vorschlägen)
+function logView(key){ if (!sb) return; const viewer = me ? me.id : (store.get('mn-anon') || (store.set('mn-anon', uuid()), store.get('mn-anon')));
+  sb.from('messe_views').insert({room: ROOM, viewer, stand: key}).then(() => {}, () => {}); }
+
+// ======================= 3D-Hallenplan =======================
+let P3 = null;
+const ROWS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+function standPos(stand){ const m = normStand(stand).match(/^\d\d([A-Z]+)(\d+)/); if (!m) return null; return {x: -(+m[2]) * 0.75, z: -Math.max(0, ROWS.indexOf(m[1][0])) * 3.4}; }
+function label(t1, t2, color){
+  const c = document.createElement('canvas'); c.width = 320; c.height = 128; const g = c.getContext('2d');
+  g.fillStyle = 'rgba(255,255,255,.95)'; g.strokeStyle = color; g.lineWidth = 6;
+  g.beginPath(); g.moveTo(16, 4); g.arcTo(316, 4, 316, 124, 16); g.arcTo(316, 124, 4, 124, 16); g.arcTo(4, 124, 4, 4, 16); g.arcTo(4, 4, 316, 4, 16); g.closePath(); g.fill(); g.stroke();
+  g.fillStyle = '#18262C'; g.textAlign = 'center'; g.font = 'bold 50px "Barlow Semi Condensed", Arial Narrow, sans-serif'; g.fillText(t1, 160, 56);
+  g.font = '600 32px Barlow, Arial, sans-serif'; g.fillStyle = '#5B6A70'; g.fillText(String(t2).slice(0, 18), 160, 104);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map: new THREE.CanvasTexture(c), depthWrite: false})); s.scale.set(3.4, 1.36, 1); return s;
+}
+function hallsList(){ const hs = new Set(Object.values(allStands()).map(s => s.halle).filter(h => /^\d\.\d$/.test(h))); return [...hs].sort((a, b) => a === '4.2' ? -1 : b === '4.2' ? 1 : a.localeCompare(b)); }
+function initPlan(){
+  if (!window.THREE || !THREE.OrbitControls) { $('hint').textContent = '3D not available'; return; }
+  const box = $('box'); let renderer;
+  try { renderer = new THREE.WebGLRenderer({antialias: true}); } catch (e) { $('hint').textContent = '3D not available on this device'; return; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1)); renderer.setClearColor(0xEAF1F3); renderer.shadowMap.enabled = true;
+  box.insertBefore(renderer.domElement, box.firstChild);
+  const scene = new THREE.Scene(); scene.fog = new THREE.Fog(0xEAF1F3, 80, 190);
+  const cam = new THREE.PerspectiveCamera(42, 1, 0.1, 700);
+  const controls = new THREE.OrbitControls(cam, renderer.domElement); controls.enableDamping = true; controls.maxPolarAngle = Math.PI * 0.46; controls.minDistance = 6; controls.maxDistance = 160; controls.screenSpacePanning = true;
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb9ccd2, 0.85));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(25, 50, 20); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+  Object.assign(sun.shadow.camera, {left: -90, right: 90, top: 90, bottom: -90}); scene.add(sun);
+  const group = new THREE.Group(); scene.add(group);
+  P3 = {renderer, cam, controls, group, hall: '4.2', meshes: [], pulses: [], t: 0};
+  P3.resize = () => { const w = box.clientWidth, h = box.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+  P3.resize(); window.addEventListener('resize', P3.resize);
+  const ray = new THREE.Raycaster(), v = new THREE.Vector2(); let down = null;
+  renderer.domElement.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
+  renderer.domElement.addEventListener('pointerup', e => { if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 8) return;
+    const r = renderer.domElement.getBoundingClientRect(); v.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(v, cam); const hit = ray.intersectObjects(P3.meshes)[0]; if (hit) openProfile(hit.object.userData.key); });
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const loop = ts => { requestAnimationFrame(loop); if ($('plan').hidden) return; P3.t = ts / 1000;
+    if (!reduce) P3.pulses.forEach((p, i) => { const k = 1 + 0.15 * Math.sin(P3.t * 3 + i); p.scale.set(k, 1, k); });
+    controls.update(); renderer.render(scene, cam); };
+  requestAnimationFrame(loop);
+  rebuildPlan(true);
+}
+function rebuildPlan(resetCam){
+  if (!P3) return;
+  const hs = hallsList(); if (!hs.includes(P3.hall)) P3.hall = hs[0] || '4.2';
+  $('halls').innerHTML = hs.map(h => `<button type="button" data-h="${h}" aria-pressed="${h === P3.hall}">Hall ${h}</button>`).join('');
+  buildHall(P3.hall, resetCam);
+}
+$('halls').addEventListener('click', e => { const b = e.target.closest('[data-h]'); if (!b || !P3) return; P3.hall = b.dataset.h; rebuildPlan(true); });
+function buildHall(h, resetCam){
+  const {group, cam, controls} = P3; P3.meshes = []; P3.pulses = [];
+  while (group.children.length) { const o = group.children.pop(); o.traverse(x => { if (x.geometry) x.geometry.dispose(); if (x.material) { if (x.material.map) x.material.map.dispose(); x.material.dispose(); } }); }
+  const sugKeys = new Set(suggestions().slice(0, 10).map(x => normStand(x.s.stand)));
+  const st = Object.entries(allStands()).filter(([k, s]) => s.halle === h).map(([k, s]) => ({k, s, p: standPos(s.stand)})).filter(o => o.p);
+  if (!st.length) return;
+  const xs = st.map(o => o.p.x), zs = st.map(o => o.p.z);
+  const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cz = (Math.min(...zs) + Math.max(...zs)) / 2;
+  const W = Math.max(...xs) - Math.min(...xs) + 14, D = Math.max(...zs) - Math.min(...zs) + 12;
+  const floor = new THREE.Mesh(new THREE.BoxGeometry(W, 0.4, D), new THREE.MeshStandardMaterial({color: 0xF7FAFB, roughness: 0.95})); floor.position.y = -0.2; floor.receiveShadow = true; group.add(floor);
+  const grid = new THREE.GridHelper(Math.max(W, D), Math.round(Math.max(W, D) / 3.4), 0xC9D8DC, 0xDFE8EB); grid.position.y = 0.01; group.add(grid);
+  const wallM = new THREE.MeshStandardMaterial({color: 0xBFD6DB, transparent: true, opacity: 0.55});
+  [[0, -D / 2, W, 0.3], [0, D / 2, W, 0.3], [-W / 2, 0, 0.3, D], [W / 2, 0, 0.3, D]].forEach(([x, z, w, d]) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 1.6, d), wallM); m.position.set(x, 0.8, z); group.add(m); });
+  const hl = label('Hall ' + h, 'Fi Europe 2026', '#1F6A75'); hl.scale.set(7, 2.8, 1); hl.position.set(0, 7, -D / 2); group.add(hl);
+  st.forEach(({k, s, p}) => {
+    const isMe = me && normStand(me.stand) === k, sug = sugKeys.has(k);
+    const color = s.host ? 0xF2B705 : isMe ? 0x1F6A75 : s.member ? 0x2C8A55 : sug ? 0xE07A5F : 0x7FA9B0;
+    const H = s.host ? 3.2 : isMe ? 2.8 : s.member ? 2.3 : sug ? 2 : 1.3;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(2.1, H, 2.5), new THREE.MeshStandardMaterial({color, roughness: 0.55}));
+    m.position.set(p.x - cx, H / 2, p.z - cz); m.castShadow = true; m.receiveShadow = true; m.userData.key = k; group.add(m); P3.meshes.push(m);
+    const top = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.12, 2.7), new THREE.MeshStandardMaterial({color: 0xffffff})); top.position.set(m.position.x, H + 0.06, m.position.z); group.add(top);
+    const l = label(s.stand + (s.member ? ' ●' : ''), s.name, '#' + color.toString(16).padStart(6, '0')); l.position.set(m.position.x, H + 1.3, m.position.z); group.add(l);
+    if (s.member || sug || s.host) { const ring = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.08, 36, 1, true), new THREE.MeshBasicMaterial({color, transparent: true, opacity: 0.5, side: THREE.DoubleSide}));
+      ring.position.set(m.position.x, 0.06, m.position.z); group.add(ring); P3.pulses.push(ring); }
+  });
+  if (resetCam) { const dist = Math.max(W / Math.max(0.4, cam.aspect), D) * 0.62 + 10; cam.position.set(0, dist * 0.85, dist * 0.7); controls.target.set(0, 0, 0); controls.update(); }
+}
+
+// ======================= Start =======================
+(async function boot(){
+  const nav = (navigator.language || 'en').slice(0, 2);
+  lang = store.get('mn-lang') || (UI[nav] ? nav : (LANGS.find(l => l[0] === nav) ? nav : 'en'));
+  applyUI();
+  try { FIRMS = await (await fetch('firmen.json')).json(); } catch (e) { FIRMS = []; }
+  me = store.get('mn-me');
+  initPlan();
+  if (window.supabase && CFG.url && CFG.key) {
+    sb = window.supabase.createClient(CFG.url, CFG.key, {auth: {persistSession: false}});
+    const [{data: ms, error: e1}, {data: mm}, {data: vs}] = await Promise.all([
+      sb.from('messe_members').select('*').eq('room', ROOM).limit(2000),
+      sb.from('messe_messages').select('*').eq('room', ROOM).order('created_at', {ascending: false}).limit(200),
+      sb.from('messe_views').select('stand').eq('room', ROOM).order('created_at', {ascending: false}).limit(3000)]);
+    if (e1) { sb = null; $('status').textContent = '● ' + T('offline'); }
+    else {
+      $('status').textContent = '● ' + T('online');
+      (ms || []).forEach(p => members[p.id] = p); msgs = (mm || []).reverse(); (vs || []).forEach((v, i) => views[i] = v);
+      sb.channel('mn').on('postgres_changes', {event: 'INSERT', schema: 'public', table: 'messe_messages', filter: 'room=eq.' + ROOM}, p => {
+          if (msgs.find(x => x.id === p.new.id)) return; msgs.push(p.new);
+          if (curView === 'chatView') renderMsgs(); else if (!me || p.new.member_id !== me.id) { unread++; $('badge').textContent = unread; $('badge').hidden = false; } })
+        .on('postgres_changes', {event: 'INSERT', schema: 'public', table: 'messe_members', filter: 'room=eq.' + ROOM}, p => { members[p.new.id] = p.new; rebuildPlan(); })
+        .subscribe();
+      rebuildPlan();
+    }
+  } else { $('status').textContent = '● ' + T('offline'); }
+  if (!me) setTimeout(openJoin, 600);
+})();
+</script>
+</body>
+</html>
